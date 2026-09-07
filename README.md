@@ -541,102 +541,38 @@ Key measures stored in the fact table include:
 
 ---
 
-## 📚 Dimension Tables
+### 📚 Dimension Tables
 
-The warehouse contains five dimension tables.
+The data warehouse contains five dimension tables that store descriptive information used to analyze the order transactions from different business perspectives.
 
-1. dim_customer
+| Dimension Table | Primary Key | Key Attributes | Purpose |
+|---|---|---|---|
+| `dim_customer` | `customer_key` | Customer ID, Name, Age, Gender, City, Signup Date | Stores customer information for customer-level analysis |
+| `dim_restaurant` | `restaurant_key` | Restaurant ID, Name, City, Cuisine, Rating, Preparation Time | Stores restaurant information for restaurant and cuisine analysis |
+| `dim_delivery` | `delivery_key` | Delivery Partner ID, Name, Vehicle Type, City, Joining Date, Rating | Stores delivery partner information for operational analysis |
+| `dim_payment` | `payment_key` | Payment ID, Order ID, Payment Method, Payment Status, Transaction Amount | Stores payment information for payment and transaction analysis |
+| `dim_date` | `date_key` | Full Date, Year, Quarter, Month, Month Name, Day, Day Name, Week | Supports time-based analysis and reporting |
 
-Stores descriptive information about customers.
+### ⭐ Fact Table
 
--customer_key	-> Warehouse surrogate key
--customer_id	-> Original customer identifier
--customer_name	-> Customer name
--age	-> Customer age
--gender	-> Customer gender
--city	Customer -> city
--signup_date	->  Customer signup date
+| Fact Table | Primary Key | Foreign Keys | Key Measures | Purpose |
+|---|---|---|---|---|
+| `fact_orders` | `order_key` | Customer, Restaurant, Delivery, Payment, Date Keys | Order Amount, Discount, Delivery Fee, Final Amount, Delivery Delay | Stores order-level transactional data for business analysis |
 
-2. dim_restaurant
+### 🔗 Warehouse Structure
 
-Stores information about restaurants.
-
--restaurant_key	-> Warehouse surrogate key
--restaurant_id	-> Original restaurant identifier
--restaurant_name	-> Restaurant name
--city	-> Restaurant city
--cuisine	-> Cuisine type
--rating-> 	Restaurant rating
--avg_preparation_time	-> Average food preparation time
-
-3. dim_delivery
-
-Stores information about delivery partners.
-
--delivery_key	-> Warehouse surrogate key
--delivery_partner_id	-> Original delivery partner identifier
--partner_name	-> Delivery partner name
--vehicle_type	-> Vehicle used for delivery
--city	-> Partner city
--joining_date	-> Partner joining date
--rating	-> Delivery partner rating
-
-4. dim_payment
-
-Stores payment-related information.
-
--payment_key	-> Warehouse surrogate key
--payment_id	-> Original payment identifier
--order_id	-> Related order identifier
--payment_method	-> Payment method used
--payment_status	-> Payment status
--transaction_amount	-> Payment transaction amount
-
-5. dim_date
-
-The date dimension supports time-based analysis.
-
--date_key	-> Date surrogate key
--full_date-> 	Complete date
--year	-> Year
--quarter	-> Quarter
--month	-> Month number
--month_name	-> Month name
--day	-> Day
--day_name	-> Day name
--week	-> Week number
-
-The date dimension allows analysis such as:
-
-Monthly revenue
--Yearly order trends
--Quarterly performance
--Daily order patterns
--week-based analysis
-
----
-
-## 🔑 Surrogate Keys
-
-Surrogate keys were introduced for the warehouse dimension tables.
-
-For example:
-
-Source System
-customer_id = C1025
-       │
-       ▼
-dim_customer
-customer_key = 1025
-       │
-       ▼
-fact_orders
-customer_key = 1025
-
-The original source identifiers such as customer_id, restaurant_id, and delivery_partner_id are retained for traceability.
-
-The warehouse surrogate keys provide warehouse-specific identifiers for relationships between fact and dimension tables.
-
+```text
+                    dim_customer
+                         │
+                         │
+                         ▼
+dim_restaurant ───► fact_orders ◄─── dim_delivery
+                         │
+                         │
+                ┌────────┴────────┐
+                ▼                 ▼
+          dim_payment         dim_date
+```
 ---
 
 ## 🔗 Table Relationships
