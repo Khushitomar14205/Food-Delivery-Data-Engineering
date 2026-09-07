@@ -510,35 +510,6 @@ The Star Schema separates transactional measures from descriptive information, m
 
 ---
 
-### ⭐ Fact Table
-
-The central fact table in the data warehouse is `fact_orders`.
-
-It stores order-level transactional data and connects the different dimension tables through foreign keys.
-
-| Column | Type / Role | Description |
-|---|---|---|
-| `order_key` | Primary Key | Unique warehouse identifier for each order record |
-| `order_id` | Business Key | Original order identifier from the source data |
-| `customer_key` | Foreign Key | References `dim_customer` |
-| `restaurant_key` | Foreign Key | References `dim_restaurant` |
-| `delivery_key` | Foreign Key | References `dim_delivery` |
-| `payment_key` | Foreign Key | References `dim_payment` |
-| `date_key` | Foreign Key | References `dim_date` |
-| `order_time` | Attribute | Time at which the order was placed |
-| `order_amount` | Measure | Original order amount |
-| `discount` | Measure | Discount applied to the order |
-| `delivery_fee` | Measure | Delivery fee charged |
-| `final_amount` | Measure | Final order amount after discount and delivery fee |
-| `estimated_delivery_time` | Attribute | Estimated delivery time |
-| `actual_delivery_time` | Attribute | Actual delivery time |
-| `delivery_delay` | Measure | Difference between actual and estimated delivery time |
-| `is_delayed` | Flag | Indicates whether the delivery was delayed |
-| `order_status` | Attribute | Order status such as Delivered, Cancelled, or Pending |
-
-The fact table acts as the central point of the Star Schema and allows business metrics to be analyzed across different dimensions.
-
----
 
 ### 📚 Dimension Tables
 
