@@ -227,13 +227,21 @@ The extracted data is processed using Python and Pandas.
 The transformation stage includes:
 
 -Handling missing values
+
 -Removing duplicate records
+
 -Validating numerical values
+
 -Removing invalid records
+
 -Checking referential integrity
+
 -Standardizing data types
+
 -Converting date and time columns
+
 -Creating derived business fields
+
 -Order-level transformations
 
 The following fields were created:
