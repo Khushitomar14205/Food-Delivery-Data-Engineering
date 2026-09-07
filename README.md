@@ -247,11 +247,17 @@ The transformation stage includes:
 The following fields were created:
 
 -final_amount
+
 -delivery_delay
+
 -is_delayed
+
 -order_year
+
 -order_month
+
 -order_day
+
 -order_hour
 
 The final order amount is calculated as:
@@ -273,9 +279,13 @@ After transformation and validation, the cleaned datasets are loaded into MySQL 
 The staging layer contains:
 
 -stg_customers
+
 -stg_restaurants
+
 -stg_delivery_partners
+
 -stg_orders
+
 -stg_payments
 
 The staging layer acts as an intermediate layer between the source data and the analytical data warehouse.
@@ -288,10 +298,15 @@ The warehouse consists of:
 
 One central fact table: fact_orders
 Five dimension tables:
+
 -dim_customer
+
 -dim_restaurant
+
 -dim_delivery
+
 -dim_payment
+
 -dim_date
 
 This structure makes the data easier to query and analyze for business reporting.
@@ -301,11 +316,17 @@ This structure makes the data easier to query and analyze for business reporting
 The data warehouse is used for:
 
 -SQL-based business analysis
+
 -KPI calculation
+
 -Revenue analysis
--Customer analysis
+
+-Customer analysis 
+
 -Restaurant performance analysis
+
 -Delivery performance analysis
+
 -Time-based analysis
 
 The warehouse is then connected to Power BI to create interactive dashboards and visual reports.
@@ -319,10 +340,15 @@ Data validation was performed at different stages of the pipeline.
 Key checks included:
 
 -Missing-value checks
+
 -Duplicate detection
+
 -Negative-value detection
+
 -Data-type validation
+
 -Referential integrity checks
+
 -Record-count validation
 
 The final cleaned datasets were saved separately before loading them into MySQL.
