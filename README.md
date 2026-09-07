@@ -510,34 +510,33 @@ The Star Schema separates transactional measures from descriptive information, m
 
 ---
 
-## 📌 Fact Table
+### ⭐ Fact Table
 
-1.fact_orders
+The central fact table in the data warehouse is `fact_orders`.
 
-The fact_orders table is the central table of the warehouse and stores order-level transactional data.
+It stores order-level transactional data and connects the different dimension tables through foreign keys.
 
-It contains:
+| Column | Type / Role | Description |
+|---|---|---|
+| `order_key` | Primary Key | Unique warehouse identifier for each order record |
+| `order_id` | Business Key | Original order identifier from the source data |
+| `customer_key` | Foreign Key | References `dim_customer` |
+| `restaurant_key` | Foreign Key | References `dim_restaurant` |
+| `delivery_key` | Foreign Key | References `dim_delivery` |
+| `payment_key` | Foreign Key | References `dim_payment` |
+| `date_key` | Foreign Key | References `dim_date` |
+| `order_time` | Attribute | Time at which the order was placed |
+| `order_amount` | Measure | Original order amount |
+| `discount` | Measure | Discount applied to the order |
+| `delivery_fee` | Measure | Delivery fee charged |
+| `final_amount` | Measure | Final order amount after discount and delivery fee |
+| `estimated_delivery_time` | Attribute | Estimated delivery time |
+| `actual_delivery_time` | Attribute | Actual delivery time |
+| `delivery_delay` | Measure | Difference between actual and estimated delivery time |
+| `is_delayed` | Flag | Indicates whether the delivery was delayed |
+| `order_status` | Attribute | Order status such as Delivered, Cancelled, or Pending |
 
--Order information
--Customer reference
--Restaurant reference
--Delivery partner reference
--Payment reference
--Date reference
--Order amount
--Discount
--Delivery fee
--Final amount
--Delivery delay
--Order status
-
-Key measures stored in the fact table include:
-
--order_amount
--discount
--delivery_fee
--final_amount
--delivery_delay
+The fact table acts as the central point of the Star Schema and allows business metrics to be analyzed across different dimensions.
 
 ---
 
@@ -559,6 +558,50 @@ The data warehouse contains five dimension tables that store descriptive informa
 |---|---|---|---|---|
 | `fact_orders` | `order_key` | Customer, Restaurant, Delivery, Payment, Date Keys | Order Amount, Discount, Delivery Fee, Final Amount, Delivery Delay | Stores order-level transactional data for business analysis |
 
+---
+
+### 🔑 Surrogate Keys
+
+Surrogate keys were used in the dimension tables to provide unique warehouse-specific identifiers.
+
+Instead of directly using the source system IDs as primary keys, each dimension table has its own surrogate key.
+
+| Dimension Table | Surrogate Key | Source / Business Key |
+|---|---|---|
+| `dim_customer` | `customer_key` | `customer_id` |
+| `dim_restaurant` | `restaurant_key` | `restaurant_id` |
+| `dim_delivery` | `delivery_key` | `delivery_partner_id` |
+| `dim_payment` | `payment_key` | `payment_id` |
+| `dim_date` | `date_key` | `full_date` |
+
+### Why Surrogate Keys Were Used
+
+Surrogate keys provide a warehouse-specific identifier for each dimension record and make relationships between fact and dimension tables easier to manage.
+
+For example:
+
+```text
+Source System
+     │
+     │ customer_id = C1025
+     ▼
+┌─────────────────────────┐
+│     dim_customer        │
+│                         │
+│ customer_key = 1025     │
+│ customer_id  = C1025    │
+└────────────┬────────────┘
+             │
+             │ customer_key
+             ▼
+┌─────────────────────────┐
+│      fact_orders        │
+│                         │
+│ customer_key = 1025     │
+│ order_id = O5001        │
+└─────────────────────────┘
+
+---
 ### 🔗 Warehouse Structure
 
 ```text
